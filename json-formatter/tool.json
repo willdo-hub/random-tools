@@ -1,0 +1,6 @@
+{
+  "name": "JSON Formatter",
+  "description": "Paste JSON to validate, pretty-print, or minify it. Runs entirely in your browser.",
+  "icon": "🧾",
+  "tags": ["json", "dev"]
+}
