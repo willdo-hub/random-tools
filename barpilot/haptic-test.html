@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>BarPilot haptic test</title>
+<meta name="color-scheme" content="dark" />
+<style>
+  :root { --bg:#0b0d10; --panel:#161a20; --text:#f2f4f7; --muted:#9aa4b2; --accent:#ffb020; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.4 -apple-system, system-ui, sans-serif;
+         padding:16px 16px calc(24px + env(safe-area-inset-bottom)); }
+  h1 { font-size:20px; margin:4px 0 4px; }
+  p { color:var(--muted); margin:0 0 14px; font-size:14px; }
+  .grid { display:grid; gap:10px; }
+  button { width:100%; min-height:64px; border:2px solid transparent; border-radius:14px; background:var(--panel);
+           color:var(--text); font:600 16px/1.2 inherit; text-align:left; padding:10px 14px;
+           touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+  button small { display:block; font-weight:400; color:var(--muted); font-size:13px; margin-top:4px; }
+  button.hit { border-color:var(--accent); }
+  #info { font-size:13px; color:var(--muted); margin-top:16px; word-break:break-word; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<h1>Haptic test</h1>
+<p>Tap each button a few times with Silent mode off or on, it doesn't matter. Then tell me which ones you <b>felt</b>, and whether the strong ones feel stronger or just like separate ticks.</p>
+<div class="grid" id="grid"></div>
+<div id="info"></div>
+<p style="margin-top:16px"><a href="./">← Back to BarPilot</a></p>
+<script>
+function tick() {
+  try {
+    const label = document.createElement("label");
+    label.setAttribute("aria-hidden", "true");
+    label.style.display = "none";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.setAttribute("switch", "");
+    label.appendChild(input);
+    document.head.appendChild(label);
+    label.click();
+    document.head.removeChild(label);
+  } catch {}
+  if (navigator.vibrate) try { navigator.vibrate(12); } catch {}
+}
+function burst(n, gap) { tick(); for (let i = 1; i < n; i++) setTimeout(tick, gap * i); }
+
+const tests = [
+  { n: "1. Tick on touch-down", d: "Fires the moment your finger touches (no delay if it works).", on: "touchstart", run: () => tick() },
+  { n: "2. Tick on release", d: "Fires when your finger lifts. This is what BarPilot uses now.", on: "touchend", run: () => tick() },
+  { n: "3. Touch-down, tapping fast", d: "Tap this one quickly several times in a row. Do later taps tick on touch-down?", on: "pointerdown", run: () => tick() },
+  { n: "4. Strong A: 2 ticks, 30 ms", d: "On release.", on: "touchend", run: () => burst(2, 30) },
+  { n: "5. Strong B: 3 ticks, 40 ms", d: "On release. BarPilot uses this for beat 1 now.", on: "touchend", run: () => burst(3, 40) },
+  { n: "6. Strong C: 3 ticks, 60 ms", d: "On release.", on: "touchend", run: () => burst(3, 60) },
+  { n: "7. Strong D: 5 ticks, 20 ms", d: "On release. A short buzz, if iOS allows it.", on: "touchend", run: () => burst(5, 20) },
+];
+const grid = document.getElementById("grid");
+for (const t of tests) {
+  const b = document.createElement("button");
+  b.innerHTML = t.n + "<small>" + t.d + "</small>";
+  b.addEventListener(t.on, (e) => {
+    if (t.on !== "pointerdown") e.preventDefault();
+    t.run();
+    b.classList.add("hit");
+    setTimeout(() => b.classList.remove("hit"), 150);
+  }, { passive: false });
+  grid.appendChild(b);
+}
+const ios = (navigator.userAgent.match(/OS (\d+)_(\d+)/) || []).slice(1).join(".");
+document.getElementById("info").textContent =
+  "iOS " + (ios || "?") + " · vibrate API: " + (typeof navigator.vibrate === "function" ? "yes" : "no") +
+  " · " + navigator.userAgent;
+</script>
+</body>
+</html>
