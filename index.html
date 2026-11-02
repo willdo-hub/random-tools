@@ -81,6 +81,9 @@
       .then((data) => { tools = data.tools || []; render(); })
       .catch(() => { empty.hidden = false; empty.textContent = "Couldn't load tools.json — run `node scripts/build-manifest.mjs`."; });
     q.addEventListener("input", render);
+
+    // Offline support: caches the home page and every tool.
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
   </script>
 </body>
 </html>

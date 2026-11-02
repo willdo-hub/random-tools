@@ -61,5 +61,9 @@
       catch { say("Copy failed", "err"); }
     };
   </script>
+  <script>
+    // Offline support (the site-wide service worker lives at the repo root).
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("../sw.js", { scope: "../" }).catch(() => {});
+  </script>
 </body>
 </html>

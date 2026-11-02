@@ -22,6 +22,15 @@ A collection of small personal tools, published as one website with GitHub Pages
 
 Folders without a `tool.json`, and folders starting with `_` or `.`, are not listed.
 
+## Offline
+
+The whole site works offline after you open the home page once. `sw.js` at the root caches the
+home page and every listed tool (its page and the files that page references). New tools are
+cached automatically on the next deploy. A tool can ship its own `sw.js` (like `barpilot/`) if it
+needs something more specific.
+
+To install a tool like an app, open it on your phone and use **Add to Home Screen**.
+
 ## Preview locally
 
 ```sh
