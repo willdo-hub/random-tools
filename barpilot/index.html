@@ -17,6 +17,11 @@
     <meta name="format-detection" content="telephone=no" />
     <script type="module" crossorigin src="./assets/index-C2RkTHmP.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Bcuh-Ba7.css">
+    <style>
+      /* Fix: sheet rows were shrinking to their 52px min-height, so long descriptions
+         overlapped the next heading in Settings. Keep this when updating from the artifact. */
+      .sheet-body > *, .sheet-body .stack > *, .sheet-body section > *, .toggle-row { flex-shrink: 0; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
