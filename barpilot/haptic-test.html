@@ -48,8 +48,8 @@ function burst(n, gap) { tick(); for (let i = 1; i < n; i++) setTimeout(tick, ga
 
 const tests = [
   { n: "1. Tick on touch-down", d: "Fires the moment your finger touches (no delay if it works).", on: "touchstart", run: () => tick() },
-  { n: "2. Tick on release", d: "Fires when your finger lifts. This is what BarPilot uses now.", on: "touchend", run: () => tick() },
-  { n: "3. Touch-down, tapping fast", d: "Tap this one quickly several times in a row. Do later taps tick on touch-down?", on: "pointerdown", run: () => tick() },
+  { n: "2. Tick on release", d: "Fires when your finger lifts. BarPilot uses this for your first tap.", on: "touchend", run: () => tick() },
+  { n: "3. Touch-down, tapping steadily", d: "Tap this steadily several times. BarPilot now does this once you're tapping. Do the later taps tick instantly?", on: "pointerdown", run: () => tick() },
   { n: "4. Single tick (normal beat)", d: "On release. Compare the strong ones against this.", on: "touchend", run: () => tick() },
   { n: "5. Strong A: 2 ticks at once", d: "On release. Cleanest, if iOS stacks them.", on: "touchend", run: () => { tick(); tick(); } },
   { n: "6. Strong B: 2 ticks, 8 ms", d: "On release.", on: "touchend", run: () => burst(2, 8) },
